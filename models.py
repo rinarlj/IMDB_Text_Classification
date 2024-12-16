@@ -223,7 +223,7 @@ class LSTM:
         model = Sequential()
         model.add(Embedding(input_dim=self.vocab_size, output_dim=self.embedding_dim, input_length=self.max_length))
         if bidirectional:
-            model.add(Bidirectional(LSTM(self.lstm_units, return_sequences=False)))
+            model.add(Bidirectional(LSTM(self.lstm_units)))
         else:
             model.add(LSTM(self.lstm_units, return_sequences=False))
         model.add(Dropout(0.5))
