@@ -6,20 +6,6 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 
 
 
-def load_data(train_path, test_path):
-    """
-    Charge les données d'entraînement et de test à partir des fichiers pickle.
-    :param train_path: Chemin du fichier pickle des données d'entraînement.
-    :param test_path: Chemin du fichier pickle des données de test.
-    :return: Tuple (train_data, train_labels, test_data, test_labels).
-    """
-    with open(train_path, "rb") as f:
-        train_data, train_labels = pickle.load(f)
-
-    with open(test_path, "rb") as f:
-        test_data, test_labels = pickle.load(f)
-
-    return train_data, train_labels, test_data, test_labels
 
 class BowLog:
     def __init__(self, max_features=10000):

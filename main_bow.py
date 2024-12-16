@@ -4,7 +4,7 @@ from models import BowLog
 import pickle
 
 
-with open('path_to_your_file/imdb_data.pkl', 'rb') as f:
+with open('/content/drive/MyDrive/imdb_train_test_text.pkl', 'rb') as f:
     data = pickle.load(f)
     train_data = data['train_text']
     test_data = data['test_text']
