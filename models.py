@@ -2,7 +2,11 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 from sklearn.feature_extraction.text import TfidfVectorizer
-
+import keras
+import numpy as np
+from keras.layers import Embedding, Flatten, Dense, Dropout
+from tensorflow.keras.preprocessing.text import Tokenizer
+from keras.preprocessing.sequence import pad_sequences
 
 class BowLog:
     def __init__(self, max_features=10000, max_iter=1000):
@@ -78,4 +82,93 @@ class NGramLog:
     def evaluate(self, X_test, y_test):
         """Évalue le modèle sur des données de test."""
         y_pred = self.model.predict(X_test)
+        return accuracy_score(y_test, y_pred)
+    
+
+class WordEmbeddingMLP:
+    def __init__(self, vocab_size=10000, max_length=200, embedding_dim=50):
+        """
+        Initialisation du modèle Word Embedding + MLP.
+        
+        Args:
+        - vocab_size : Taille du vocabulaire à utiliser pour le Tokenizer.
+        - max_length : Longueur maximale des séquences après padding.
+        - embedding_dim : Dimension des vecteurs d'embedding.
+        """
+        self.vocab_size = vocab_size
+        self.max_length = max_length
+        self.embedding_dim = embedding_dim
+
+    def preprocess(self, texts, labels):
+        """
+        Prétraitement des données textuelles : Tokenization et Padding.
+        
+        Args:
+        - texts : Liste des critiques textuelles.
+        - labels : Liste des étiquettes associées (0 ou 1).
+        
+        Returns:
+        - X_padded : Séquences tokenisées et remplies.
+        - y : Numpy array des labels.
+        """
+        tokenizer = Tokenizer(num_words=self.vocab_size)
+        tokenizer.fit_on_texts(texts)
+        sequences = tokenizer.texts_to_sequences(texts)
+        X_padded = pad_sequences(sequences, maxlen=self.max_length, padding='post')
+        y = np.array(labels)
+        self.tokenizer = tokenizer
+        return X_padded, y
+
+    def build_model(self):
+        """
+        Construction du modèle Word Embedding + MLP.
+        
+        Returns:
+        - Un modèle Keras compilé.
+        """
+        model = keras.Sequential([
+            Embedding(input_dim=self.vocab_size, output_dim=self.embedding_dim, input_length=self.max_length),
+            Flatten(),
+            Dense(128, activation='relu'),
+            Dropout(0.5),
+            Dense(64, activation='relu'),
+            Dropout(0.5),
+            Dense(1, activation='sigmoid')
+        ])
+        model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+        self.model = model
+        return model
+
+    def train(self, X_train, y_train, X_val, y_val, batch_size=32, epochs=10):
+        """
+        Entraînement du modèle.
+        
+        Args:
+        - X_train : Données d'entraînement.
+        - y_train : Labels d'entraînement.
+        - X_val : Données de validation.
+        - y_val : Labels de validation.
+        - batch_size : Taille du batch pour l'entraînement.
+        - epochs : Nombre d'époques d'entraînement.
+        """
+        self.history = self.model.fit(
+            X_train, y_train,
+            validation_data=(X_val, y_val),
+            batch_size=batch_size,
+            epochs=epochs,
+            verbose=1
+        )
+
+    def evaluate(self, X_test, y_test):
+        """
+        Évaluation du modèle sur des données de test.
+        
+        Args:
+        - X_test : Données de test.
+        - y_test : Labels de test.
+        
+        Returns:
+        - Précision du modèle sur les données de test.
+        """
+        y_pred = (self.model.predict(X_test) > 0.5).astype("int32")
         return accuracy_score(y_test, y_pred)
