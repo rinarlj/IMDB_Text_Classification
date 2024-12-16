@@ -24,6 +24,3 @@ model.train(X_train, train_labels)
 accuracy = model.evaluate(X_test, test_labels)
 print(f"Accuracy with Bag of Words: {accuracy:.4f}")
 
-# Sauvegarder le modèle et le vectoriseur
-with open("bow_model.pkl", "wb") as f:
-    pickle.dump(model, f)

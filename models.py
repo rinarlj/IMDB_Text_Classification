@@ -1,16 +1,13 @@
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
-import pickle
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 
-
-
 class BowLog:
-    def __init__(self, max_features=10000):
+    def __init__(self, max_features=10000, max_iter=1000):
         self.vectorizer = CountVectorizer(max_features=max_features)
-        self.model = LogisticRegression()
+        self.model = LogisticRegression(max_iter=max_iter)
 
     def preprocess(self, train_data, test_data):
         """Transforme les données en utilisant BoW."""
@@ -28,9 +25,9 @@ class BowLog:
         return accuracy_score(y_test, y_pred)
 
 class TFIDFLog:
-    def __init__(self, max_features=10000):
+    def __init__(self, max_features=10000, max_iter=1000):
         self.vectorizer = TfidfVectorizer(max_features=max_features)
-        self.model = LogisticRegression()
+        self.model = LogisticRegression(max_iter=max_iter)
 
     def preprocess(self, train_data, test_data):
         """Transforme les données en utilisant TF-IDF."""
@@ -48,9 +45,9 @@ class TFIDFLog:
         return accuracy_score(y_test, y_pred)
 
 class NGramLog:
-    def __init__(self, max_features=10000, ngram_range=(1, 2)):
+    def __init__(self, max_features=10000, ngram_range=(1, 2), max_iter=1000):
         self.vectorizer = CountVectorizer(max_features=max_features, ngram_range=ngram_range)
-        self.model = LogisticRegression()
+        self.model = LogisticRegression(max_iter=max_iter)
 
     def preprocess(self, train_data, test_data):
         """Transforme les données en utilisant N-Gram."""
