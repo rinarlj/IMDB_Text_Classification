@@ -1,19 +1,15 @@
 import pickle
 from models import NGramLog
-from keras.datasets import imdb
 
-# Charger les données IMDB
-(train_data, train_labels), (test_data, test_labels) = imdb.load_data(num_words=10000)
+import pickle
 
-# Décodage des indices en texte brut
-word_index = imdb.get_word_index()
-reverse_word_index = {value: key for key, value in word_index.items()}
 
-def decode_review(encoded_review):
-    return " ".join([reverse_word_index.get(i - 3, "?") for i in encoded_review])
-
-train_data = [decode_review(review) for review in train_data]
-test_data = [decode_review(review) for review in test_data]
+with open('path_to_your_file/imdb_data.pkl', 'rb') as f:
+    data = pickle.load(f)
+    train_data = data['train_text']
+    test_data = data['test_text']
+    train_labels = data['train_labels']
+    test_labels = data['test_labels']
 
 # Initialiser le modèle BoW
 model = NGramLog(max_features=10000)
