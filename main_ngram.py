@@ -12,7 +12,7 @@ with open('/content/drive/MyDrive/imdb_train_test_text.pkl', 'rb') as f:
     test_labels = data['test_labels']
 
 # Initialiser le modèle BoW
-model = NGramLog(max_features=10000)
+model = NGramLog(max_features=10000, ngram_sizes=(2, 3, 5))
 
 # Prétraitement
 X_train, X_test = model.preprocess(train_data, test_data)
