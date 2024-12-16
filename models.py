@@ -223,9 +223,9 @@ class LSTM:
         model = Sequential()
         model.add(Embedding(input_dim=self.vocab_size, output_dim=self.embedding_dim, input_length=self.max_length))
         if bidirectional:
-            model.add(Bidirectional(LSTM(self.lstm_units)))
+            model.add(Bidirectional(LSTM(self.lstm_units)))  # Supprime return_sequences si non nécessaire
         else:
-            model.add(LSTM(self.lstm_units, return_sequences=False))
+            model.add(LSTM(self.lstm_units))
         model.add(Dropout(0.5))
         model.add(Dense(128, activation='relu'))
         model.add(Dropout(0.5))
@@ -233,6 +233,7 @@ class LSTM:
         model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
         self.model = model
         return model
+
 
     def train(self, X_train, y_train, X_val, y_val, batch_size=32, epochs=10):
         """
