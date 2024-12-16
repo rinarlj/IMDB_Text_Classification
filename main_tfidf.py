@@ -23,6 +23,6 @@ model.train(X_train, train_labels)
 
 # Évaluer le modèle
 accuracy = model.evaluate(X_test, test_labels)
-print(f"Accuracy with Bag of Words: {accuracy:.4f}")
+print(f"Accuracy with TF-IDF: {accuracy:.4f}")
 
 
