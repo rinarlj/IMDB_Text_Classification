@@ -6,7 +6,6 @@ import keras
 from tensorflow.keras.models import Sequential
 import numpy as np
 from tensorflow.keras.layers import Embedding,Flatten, LSTM, Dense, Dropout
-from keras.layers.Layer import Bidirectional
 from tensorflow.keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 
