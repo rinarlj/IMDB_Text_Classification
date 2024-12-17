@@ -24,4 +24,7 @@ lstm_classifier.build_model()
 lstm_classifier.train(X_train, y_train, X_test, y_test, batch_size=128, epochs=20)
 
 accuracy = lstm_classifier.evaluate(X_test, y_test)
+print("   ")
+print("----------------------------------------------------------------------------------------------")
+print("   ")
 print(f"Test Accuracy: {accuracy:.2f}")
