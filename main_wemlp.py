@@ -21,7 +21,7 @@ with open('/content/drive/MyDrive/imdb_train_test_text.pkl', 'rb') as f:
     X_test, y_test = wemlp.preprocess(test_text, test_labels)
  
     wemlp.build_model()
-    wemlp.train(X_train, y_train, X_test, y_test, batch_size=32, epochs=10)
+    wemlp.train(X_train, y_train, X_test, y_test, batch_size=128, epochs=20)
 
     accuracy = wemlp.evaluate(X_test, y_test)
     print(f"Test Accuracy for word embedding + MLP : {accuracy:.2f}")
