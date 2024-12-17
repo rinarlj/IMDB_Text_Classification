@@ -12,8 +12,8 @@ test_labels = data['test_labels']
 # Initialiser le modèle
 vocab_size = 10000
 max_length = 200
-embedding_dim = 50
-lstm_units = 128
+embedding_dim = 100
+lstm_units = 256
 
 lstm_classifier = LSTMClassifier(vocab_size=vocab_size, max_length=max_length, embedding_dim=embedding_dim, lstm_units=lstm_units)
 
