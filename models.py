@@ -16,17 +16,14 @@ class BowLog:
         self.model = LogisticRegression(max_iter=max_iter)
 
     def preprocess(self, train_data, test_data):
-        """Transforme les données en utilisant BoW."""
         X_train = self.vectorizer.fit_transform(train_data)
         X_test = self.vectorizer.transform(test_data)
         return X_train, X_test
 
     def train(self, X_train, y_train):
-        """Entraîne le modèle."""
         self.model.fit(X_train, y_train)
 
     def evaluate(self, X_test, y_test):
-        """Évalue le modèle sur des données de test."""
         y_pred = self.model.predict(X_test)
         return accuracy_score(y_test, y_pred)
 
@@ -36,17 +33,14 @@ class TFIDFLog:
         self.model = LogisticRegression(max_iter=max_iter)
 
     def preprocess(self, train_data, test_data):
-        """Transforme les données en utilisant TF-IDF."""
         X_train = self.vectorizer.fit_transform(train_data)
         X_test = self.vectorizer.transform(test_data)
         return X_train, X_test
 
     def train(self, X_train, y_train):
-        """Entraîne le modèle."""
         self.model.fit(X_train, y_train)
 
     def evaluate(self, X_test, y_test):
-        """Évalue le modèle sur des données de test."""
         y_pred = self.model.predict(X_test)
         return accuracy_score(y_test, y_pred)
 
@@ -57,7 +51,6 @@ class NGramLog:
         self.model = LogisticRegression(max_iter=max_iter)
     
     def filter_ngrams(self, X, feature_names):
-        """Filtre les N-grams pour inclure uniquement ceux ayant des longueurs spécifiques."""
         filtered_features = [
             i for i, feature in enumerate(feature_names)
             if len(feature.split()) in self.ngram_sizes
@@ -65,12 +58,9 @@ class NGramLog:
         return X[:, filtered_features]
 
     def preprocess(self, train_data, test_data):
-        """Transforme les données et filtre les N-grams."""
-        # Crée la matrice avec tous les N-grams dans la plage
         X_train_full = self.vectorizer.fit_transform(train_data)
         X_test_full = self.vectorizer.transform(test_data)
         
-        # Filtre les N-grams non désirés
         feature_names = self.vectorizer.get_feature_names_out()
         X_train = self.filter_ngrams(X_train_full, feature_names)
         X_test = self.filter_ngrams(X_test_full, feature_names)
@@ -78,11 +68,9 @@ class NGramLog:
         return X_train, X_test
 
     def train(self, X_train, y_train):
-        """Entraîne le modèle."""
         self.model.fit(X_train, y_train)
 
     def evaluate(self, X_test, y_test):
-        """Évalue le modèle sur des données de test."""
         y_pred = self.model.predict(X_test)
         return accuracy_score(y_test, y_pred)
     
@@ -90,8 +78,6 @@ class NGramLog:
 class WordEmbeddingMLP:
     def __init__(self, vocab_size=10000, max_length=200, embedding_dim=50):
         """
-        Initialisation du modèle Word Embedding + MLP.
-        
         Args:
         - vocab_size : Taille du vocabulaire à utiliser pour le Tokenizer.
         - max_length : Longueur maximale des séquences après padding.
@@ -103,8 +89,6 @@ class WordEmbeddingMLP:
 
     def preprocess(self, texts, labels):
         """
-        Prétraitement des données textuelles : Tokenization et Padding.
-        
         Args:
         - texts : Liste des critiques textuelles.
         - labels : Liste des étiquettes associées (0 ou 1).
@@ -123,8 +107,6 @@ class WordEmbeddingMLP:
 
     def build_model(self):
         """
-        Construction du modèle Word Embedding + MLP.
-        
         Returns:
         - Un modèle Keras compilé.
         """
@@ -143,8 +125,6 @@ class WordEmbeddingMLP:
 
     def train(self, X_train, y_train, X_val, y_val, batch_size=32, epochs=10):
         """
-        Entraînement du modèle.
-        
         Args:
         - X_train : Données d'entraînement.
         - y_train : Labels d'entraînement.
@@ -163,8 +143,6 @@ class WordEmbeddingMLP:
 
     def evaluate(self, X_test, y_test):
         """
-        Évaluation du modèle sur des données de test.
-        
         Args:
         - X_test : Données de test.
         - y_test : Labels de test.
@@ -178,8 +156,6 @@ class WordEmbeddingMLP:
 class LSTMClassifier:
     def __init__(self, vocab_size=10000, max_length=200, embedding_dim=50, lstm_units=128):
         """
-        Initialisation du modèle LSTM pour la classification.
-
         Args:
         - vocab_size : Taille maximale du vocabulaire pour le tokenizer.
         - max_length : Longueur maximale des séquences après padding.
@@ -193,8 +169,6 @@ class LSTMClassifier:
 
     def preprocess(self, texts, labels):
         """
-        Prétraitement des données textuelles : Tokenization et Padding.
-
         Args:
         - texts : Liste des critiques textuelles.
         - labels : Liste des étiquettes associées (0 ou 1).
@@ -211,10 +185,8 @@ class LSTMClassifier:
         self.tokenizer = tokenizer
         return X_padded, y
 
-    def build_model(self, bidirectional=False):
+    def build_model(self):
         """
-        Construction du modèle LSTM.
-
         Args:
         - bidirectional : Si True, ajoute une couche LSTM bidirectionnelle.
 
@@ -223,14 +195,12 @@ class LSTMClassifier:
         """
         model = Sequential()
         model.add(Embedding(input_dim=self.vocab_size, output_dim=self.embedding_dim, input_length=self.max_length))
-        if bidirectional:
-            model.add(Bidirectional(LSTM(self.lstm_units)))  # Supprime return_sequences si non nécessaire
-        else:
-            model.add(LSTM(self.lstm_units))
+        
+        model.add(LSTM(self.lstm_units))
         model.add(Dropout(0.5))
         model.add(Dense(128, activation='relu'))
         model.add(Dropout(0.5))
-        model.add(Dense(1, activation='sigmoid'))  # Sortie binaire
+        model.add(Dense(1, activation='sigmoid')) 
         model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
         self.model = model
         return model
@@ -238,8 +208,6 @@ class LSTMClassifier:
 
     def train(self, X_train, y_train, X_val, y_val, batch_size=128, epochs=10):
         """
-        Entraînement du modèle.
-
         Args:
         - X_train : Données d'entraînement.
         - y_train : Labels d'entraînement.
@@ -258,8 +226,6 @@ class LSTMClassifier:
 
     def evaluate(self, X_test, y_test):
         """
-        Évaluation du modèle sur les données de test.
-
         Args:
         - X_test : Données de test.
         - y_test : Labels de test.
