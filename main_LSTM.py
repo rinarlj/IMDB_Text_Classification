@@ -1,4 +1,4 @@
-from models import LSTM
+from models import LSTMClassifier
 import pickle
 
 with open('/content/drive/MyDrive/imdb_train_test_text.pkl', 'rb') as f:
@@ -15,7 +15,7 @@ max_length = 200
 embedding_dim = 50
 lstm_units = 128
 
-lstm_classifier = LSTM(vocab_size=vocab_size, max_length=max_length, embedding_dim=embedding_dim, lstm_units=lstm_units)
+lstm_classifier = LSTMClassifier(vocab_size=vocab_size, max_length=max_length, embedding_dim=embedding_dim, lstm_units=lstm_units)
 
 # Prétraitement des données
 X_train, y_train = lstm_classifier.preprocess(train_text, train_labels)
