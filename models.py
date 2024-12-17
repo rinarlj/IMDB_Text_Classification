@@ -4,6 +4,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.feature_extraction.text import TfidfVectorizer
 import keras
 from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Embedding, LSTM, Dense, Dropout, Bidirectional
 import numpy as np
 from tensorflow.keras.layers import Embedding,Flatten, LSTM, Dense, Dropout
 from tensorflow.keras.preprocessing.text import Tokenizer
