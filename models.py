@@ -236,7 +236,7 @@ class LSTMClassifier:
         return model
 
 
-    def train(self, X_train, y_train, X_val, y_val, batch_size=32, epochs=10):
+    def train(self, X_train, y_train, X_val, y_val, batch_size=128, epochs=10):
         """
         Entraînement du modèle.
 
