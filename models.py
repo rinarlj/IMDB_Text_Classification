@@ -175,7 +175,7 @@ class WordEmbeddingMLP:
         y_pred = (self.model.predict(X_test) > 0.5).astype("int32")
         return accuracy_score(y_test, y_pred)
     
-class LSTM:
+class LSTMClassifier:
     def __init__(self, vocab_size=10000, max_length=200, embedding_dim=50, lstm_units=128):
         """
         Initialisation du modèle LSTM pour la classification.
